@@ -1,0 +1,11 @@
+services:
+  mongodb-standalone:
+    container_name: mongodb-standalone
+    environment:
+      MONGO_INITDB_DATABASE: aarini-assignment
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    hostname: mongodb-standalone
+    image: 'mongo:4.2'
+    ports:
+      - '27017:27017'
