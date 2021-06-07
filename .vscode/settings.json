@@ -4,5 +4,7 @@
   "prettier.endOfLine": "auto",
   "prettier.tabWidth": 2,
   "prettier.singleQuote": true,
-  "prettier.trailingComma": "none"
+  "prettier.trailingComma": "none",
+  "eslint.alwaysShowStatus": true,
+  "eslint.enable": true
 }
