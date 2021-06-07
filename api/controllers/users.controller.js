@@ -5,14 +5,23 @@ const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+const transformDOB = (DOB) => {
+  const DOBStrArr = DOB.split('-');
+  const DOBTransformed = `${DOBStrArr[1]}-${DOBStrArr[0]}-${DOBStrArr[2]}`;
+  return DOBTransformed;
+};
+
 // Create a user
 exports.signUp = async (req, res) => {
   try {
-    userName = _.get(req, 'body.userName');
-    password = _.get(req, 'body.password');
-    givenName = _.get(req, 'body.givenName', undefined);
-    surName = _.get(req, 'body.surName', undefined);
-    DOB = _.get(req, 'body.DOB', undefined);
+    const userName = _.get(req, 'body.userName');
+    const password = _.get(req, 'body.password');
+    const givenName = _.get(req, 'body.givenName', undefined);
+    const surName = _.get(req, 'body.surName', undefined);
+    var DOB = _.get(req, 'body.DOB', undefined);
+    if (DOB) {
+      DOB = transformDOB(DOB);
+    }
 
     var user = new User({
       userName: userName,
@@ -36,14 +45,14 @@ exports.signUp = async (req, res) => {
 // Get Jwt token
 exports.signIn = async (req, res) => {
   try {
-    userName = _.get(req, 'body.userName');
-    password = _.get(req, 'body.password');
+    const userName = _.get(req, 'body.userName');
+    const password = _.get(req, 'body.password');
 
     var user = await User.findOne({
       userName: userName
     });
 
-    status = _.get(user, 'status');
+    const status = _.get(user, 'status');
 
     if (!user) {
       return res.status(404).send({ message: 'User Not found.' });
@@ -106,7 +115,7 @@ exports.patchUser = async (req, res) => {
 
     if (surName) _.set(update, 'surName', surName);
     if (givenName) _.set(update, 'givenName', givenName);
-    if (DOB) _.set(update, 'DOB', DOB);
+    if (DOB) _.set(update, 'DOB', transformDOB(DOB));
 
     const user = await User.findOneAndUpdate(filter, update, {
       new: true,
@@ -138,5 +147,4 @@ exports.deleteUser = async (req, res) => {
     res.status(500).send({ message: err.toString() });
     return;
   }
-
 };
